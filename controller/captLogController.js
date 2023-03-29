@@ -1,5 +1,5 @@
-const Log = require('../models/logs')
-const logsArray = require('../models/logsArray')
+const Log = require('../models/captLogs')
+const captLogsArray = require('../models/captLogsArray')
 
 module.exports.create = async (req, res) => {
     
@@ -10,27 +10,22 @@ module.exports.create = async (req, res) => {
     }
 
     try {
-        // use the model to interact with db and create a new document in the log collection
         const result = await Log.create(req.body)
         console.log(result)
     } catch(err) {
         console.log(err)
     }
     
-    res.redirect('/logs')
+    res.redirect('/captLogs')
 
 }
 
 module.exports.index = async (req, res) => {
 
     try {
-        // Use the log model to interact with the database
-        // find will get all documents from the log collection
         const logs = await Log.find() 
         console.log('inside controller')
         
-
-        // Looks in the views folder for "logs/Index" and passes { logs } data to the view (kind of like a server props object)
         res.render('Index', { logs })
 
     } catch(err) {
@@ -54,7 +49,7 @@ module.exports.delete = async (req, res) => {
   
     try {
         await Log.findByIdAndDelete(req.params.id)
-        res.redirect('/logs')
+        res.redirect('/captLogs')
     } catch(err) {
         console.log(err)
         res.send(err.message)
@@ -83,34 +78,31 @@ module.exports.update = async (req, res) => {
     }
 
    try {
-        // pass the id to find the document in the db and the form data (req.body) to update it
         await Log.findByIdAndUpdate(req.params.id, req.body)
-        res.redirect(`/logs/${req.params.id}`)
+        res.redirect(`/captLogs/${req.params.id}`)
    } catch(err) {
         console.log(err)
         res.send(err.message)
    }
 }
 
-// POST /logs/seed
 module.exports.seed = async (req, res) => {
 
     try {
         await Log.deleteMany({})
-        await Log.create(logsArray)
-        res.redirect('/logs')
+        await Log.create(captLogsArray)
+        res.redirect('/captLogs')
     } catch(err) {
         console.log(err)
         res.send(err.message)
     }
 }
 
-// DELETE /logs/clear
 module.exports.clear = async (req, res) => {
 
     try {
         await Log.deleteMany({})
-        res.redirect('/logs')
+        res.redirect('/captLogs')
     } catch(err) {
         console.log(err)
         res.send(err.message)
